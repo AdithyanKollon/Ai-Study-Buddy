@@ -25,6 +25,7 @@ export default function App() {
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [streamingText, setStreamingText] = useState("");
+  const [streamingSources, setStreamingSources] = useState([]);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
