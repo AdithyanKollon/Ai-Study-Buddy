@@ -1,7 +1,7 @@
   import { useState } from "react";
   import axios from "axios";
 
-  const API = "https://ai-study-buddy-production-e464.up.railway.app/";
+  const API = "https://ai-study-buddy-production-e464.up.railway.app/api";
 
   export default function Auth({ onLogin }) {
     const [isLogin, setIsLogin] = useState(true);
