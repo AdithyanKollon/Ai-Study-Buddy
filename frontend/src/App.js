@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { jsPDF } from "jspdf";
 import "./App.css";
-import Auth from "./auth";
+import Auth from "./Auth";
 
-const API = "ai-study-buddy-production-7d72.up.railway.app";
+const API = "https://ai-study-buddy-production-7d72.up.railway.app/api";
 
 function formatTime(iso) {
   if (!iso) return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -33,30 +33,26 @@ export default function App() {
   const messages = chatMap[activeDocId] || [];
   const activeDoc = docs.find(d => d.doc_id === activeDocId);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { if (token) fetchDocs(); }, [token]);
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user_email");
+    setToken(null);
+    setUserEmail(null);
+    setDocs([]);
+    setActiveDocId(null);
+    setChatMap({});
+  }, []);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatMap, activeDocId, streamingText]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    setSuggestions([]);
-    if (activeDocId && token) loadMessages(activeDocId);
-  }, [activeDocId]);
-
-  const fetchDocs = async () => {
+  const fetchDocs = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/docs/list?access_token=${token}`);
       setDocs(res.data.documents);
     } catch {
       handleLogout();
     }
-  };
+  }, [token, handleLogout]);
 
-  const loadMessages = async (docId) => {
-    // don't reload if already loaded
+  const loadMessages = useCallback(async (docId) => {
     if (chatMap[docId]) return;
     try {
       const res = await axios.post(`${API}/messages/get`, {
@@ -70,10 +66,23 @@ export default function App() {
         sources: []
       }));
       setChatMap(prev => ({ ...prev, [docId]: loaded }));
-    } catch {
-      // no messages yet
-    }
-  };
+    } catch {}
+  }, [token, chatMap]);
+
+  useEffect(() => {
+    if (token) fetchDocs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMap, activeDocId, streamingText]);
+
+  useEffect(() => {
+    setSuggestions([]);
+    if (activeDocId && token) loadMessages(activeDocId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeDocId]);
 
   const saveMessage = async (docId, role, content) => {
     try {
@@ -83,24 +92,12 @@ export default function App() {
         content,
         access_token: token
       });
-    } catch {
-      // silently fail — message still shows in UI
-    }
+    } catch {}
   };
 
   const handleLogin = (accessToken, email) => {
     setToken(accessToken);
     setUserEmail(email);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user_email");
-    setToken(null);
-    setUserEmail(null);
-    setDocs([]);
-    setActiveDocId(null);
-    setChatMap({});
   };
 
   const addMessage = (docId, msg) => {
@@ -126,11 +123,8 @@ export default function App() {
     e.stopPropagation();
     if (!window.confirm("Delete this document and its chat history?")) return;
     try {
-      // delete messages
       await axios.delete(`${API}/messages/delete/${docId}?access_token=${token}`);
-      // delete from documents table
       await axios.delete(`${API}/docs/delete/${docId}?access_token=${token}`);
-
       setDocs(prev => prev.filter(d => d.doc_id !== docId));
       setChatMap(prev => { const n = { ...prev }; delete n[docId]; return n; });
       if (activeDocId === docId) setActiveDocId(null);
@@ -239,15 +233,14 @@ export default function App() {
         }
       }
 
-      const assistantMsg = {
+      setStreamingText("");
+      setStreamingSources([]);
+      addMessage(currentDocId, {
         role: "assistant",
         content: fullText,
         time: new Date().toISOString(),
         sources
-      };
-      setStreamingText("");
-      setStreamingSources([]);
-      addMessage(currentDocId, assistantMsg);
+      });
       await saveMessage(currentDocId, "assistant", fullText);
 
     } catch {
@@ -288,14 +281,16 @@ export default function App() {
       if (y > 270) { doc.addPage(); y = 20; }
 
       doc.setFontSize(9);
-      doc.setTextColor(msg.role === "user" ? 37 : 100, msg.role === "user" ? 99 : 100, msg.role === "user" ? 235 : 100);
+      doc.setTextColor(
+        msg.role === "user" ? 37 : 100,
+        msg.role === "user" ? 99 : 100,
+        msg.role === "user" ? 235 : 100
+      );
       doc.text(msg.role === "user" ? "You" : "AI Study Buddy", margin, y);
       y += 6;
 
       doc.setFontSize(10);
       doc.setTextColor(30, 30, 30);
-
-      // strip markdown for PDF
       const clean = msg.content.replace(/[*_#`]/g, "");
       const lines = doc.splitTextToSize(clean, maxWidth);
       lines.forEach(line => {
@@ -309,7 +304,6 @@ export default function App() {
     doc.save(`${activeDoc?.filename || "chat"}-summary.pdf`);
   };
 
-  // auto resize textarea
   const handleTextareaChange = (e) => {
     setInput(e.target.value);
     e.target.style.height = "auto";
@@ -320,8 +314,6 @@ export default function App() {
 
   return (
     <div className="layout">
-
-      {/* Sidebar */}
       <div className="sidebar">
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon">📚</div>
@@ -371,9 +363,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* Main */}
       <div className="main">
-
         {!activeDocId ? (
           <div className="empty-state">
             <div className="empty-state-orb">📖</div>
@@ -385,7 +375,6 @@ export default function App() {
           </div>
         ) : (
           <>
-            {/* Top bar */}
             <div className="topbar">
               <div className="topbar-left">
                 <div className="topbar-doc-icon">📄</div>
@@ -405,7 +394,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Messages */}
             <div className="messages">
               {messages.map((msg, i) => (
                 <div key={i} className={`message-row ${msg.role}`}>
@@ -421,9 +409,7 @@ export default function App() {
                     {msg.sources && msg.sources.length > 0 && (
                       <div className="source-chips">
                         {msg.sources.map((s, j) => (
-                          <span key={j} className="source-chip">
-                            📎 Source {j + 1}
-                          </span>
+                          <span key={j} className="source-chip">📎 Source {j + 1}</span>
                         ))}
                       </div>
                     )}
@@ -432,7 +418,6 @@ export default function App() {
                 </div>
               ))}
 
-              {/* Streaming bubble */}
               {streamingText && (
                 <div className="message-row assistant">
                   <div className="avatar assistant">🤖</div>
@@ -443,11 +428,17 @@ export default function App() {
                       </ReactMarkdown>
                       <span className="cursor">▋</span>
                     </div>
+                    {streamingSources.length > 0 && (
+                      <div className="source-chips">
+                        {streamingSources.map((s, j) => (
+                          <span key={j} className="source-chip">📎 Source {j + 1}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
 
-              {/* Thinking dots */}
               {loading && !streamingText && (
                 <div className="message-row assistant">
                   <div className="avatar assistant">🤖</div>
@@ -464,7 +455,6 @@ export default function App() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Suggestions */}
             {loadingSuggestions && (
               <div className="suggestions-bar">
                 <span style={{ color: "#444", fontSize: "0.82rem", fontStyle: "italic" }}>
@@ -483,7 +473,6 @@ export default function App() {
               </div>
             )}
 
-            {/* Input */}
             <div className="input-area">
               <div className="input-row">
                 <textarea
