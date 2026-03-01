@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { jsPDF } from "jspdf";
 import "./App.css";
-import Auth from "./Auth";
+import Auth from "./auth";
 
 const API = "https://ai-study-buddy-production-7d72.up.railway.app/api";
 
