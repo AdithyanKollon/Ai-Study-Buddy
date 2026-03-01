@@ -13,6 +13,30 @@
 
     const handleSubmit = async () => {
       if (!email || !password) return;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    setError("Please enter a valid email address.");
+    return;
+  }
+  if (password.length < 8) {
+    setError("Password must be at least 8 characters.");
+    return;
+  }
+  if (!isLogin) {
+    // Extra checks only for signup
+    if (!/[A-Z]/.test(password)) {
+      setError("Password must contain at least one uppercase letter.");
+      return;
+    }
+    if (!/[0-9]/.test(password)) {
+      setError("Password must contain at least one number.");
+      return;
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      setError("Password must contain at least one special character (!@#$%^&*).");
+      return;
+    }
+  }
       setLoading(true);
       setError("");
       setSuccess("");
