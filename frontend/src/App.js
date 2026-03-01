@@ -6,7 +6,7 @@ import { jsPDF } from "jspdf";
 import "./App.css";
 import Auth from "./auth";
 
-const API = "https://ai-study-buddy-production-e464.up.railway.app/";
+const API = "https://ai-study-buddy-production-e464.up.railway.app/api";
 
 function formatTime(iso) {
   if (!iso) return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
