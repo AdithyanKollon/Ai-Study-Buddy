@@ -19,7 +19,7 @@ def get_answer(question: str, context_chunks: list, chat_history: list = []):
         {
             "role": "system",
             "content": f"""You are a helpful and friendly study assistant.
-Answer the question based ONLY on the context provided below.
+Answer the question based ONLY on the context provided below.Give more detailed answers if the question is more complex, and simpler answers if the question is more basic.
 If the answer is not found in the context, say "I couldn't find that in your document."
 Be concise and clear. If relevant, mention the page number from the context.
 
