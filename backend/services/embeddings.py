@@ -8,7 +8,7 @@ load_dotenv()
 HF_TOKEN = os.getenv("HF_TOKEN")
 EMBEDDING_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
 
-client = chromadb.PersistentClient(path="/app/chroma_store")
+client = chromadb.PersistentClient(path="./chroma_store")
 
 def get_embeddings(texts: list) -> list:
     headers = {"Authorization": f"Bearer {HF_TOKEN}"}
