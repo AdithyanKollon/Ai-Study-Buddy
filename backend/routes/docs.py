@@ -24,6 +24,7 @@ async def save_doc(req: SaveDocRequest):
 
         return {"message": "Document saved"}
     except Exception as e:
+        print(f"DOCS SAVE ERROR: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/docs/list")

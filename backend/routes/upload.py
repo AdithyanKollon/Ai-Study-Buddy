@@ -18,7 +18,9 @@ async def upload_pdf(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, f)
         
         chunks = extract_and_chunk(temp_path)
+        print(f"Chunks extracted: {len(chunks)}")
         count = store_chunks(chunks, collection_name=doc_id)
+        print(f"Chunks stored: {count}")
         
         return {
             "doc_id": doc_id,
@@ -27,6 +29,9 @@ async def upload_pdf(file: UploadFile = File(...)):
             "message": "PDF processed successfully"
         }
     except Exception as e:
+        print(f"UPLOAD ERROR: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         if os.path.exists(temp_path):
