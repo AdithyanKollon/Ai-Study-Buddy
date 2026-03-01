@@ -25,15 +25,15 @@
   if (!isLogin) {
     // Extra checks only for signup
     if (!/[A-Z]/.test(password)) {
-      setError("Password must contain at least one uppercase letter.");
+      setError("Password must contain at least one uppercase letter,one number,one special character.");
       return;
     }
     if (!/[0-9]/.test(password)) {
-      setError("Password must contain at least one number.");
+      setError("Password must contain at least one uppercase letter,one number,one special character.");
       return;
     }
     if (!/[!@#$%^&*]/.test(password)) {
-      setError("Password must contain at least one special character (!@#$%^&*).");
+      setError("Password must contain at least one uppercase letter,one number,one special character.");
       return;
     }
   }
