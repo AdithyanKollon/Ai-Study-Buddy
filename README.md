@@ -4,7 +4,10 @@
 
 **[Live Demo](https://ai-study-buddy-6jyk.vercel.app)** · **[Backend API](https://ai-study-buddy-production-e464.up.railway.app)**
 
-![StudyBuddy Screenshot](https://via.placeholder.com/800x450/111318/00e5a0?text=StudyBuddy+Preview)
+![Login page](screenshots/3.png)
+![Home page](screenshots/2.png)
+![Chat page](screenshots/1.png)
+
 
 ---
 
@@ -189,12 +192,5 @@ Free API tier, no local GPU required, 1024-dimensional embeddings with strong se
 
 ## 👨‍💻 Author
 
-<<<<<<< HEAD
-Built by **Adithyan** — 4th year CS student
+Built by **Adithyan** — 
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://linkedin.com/in/yourprofile)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/yourusername)
-=======
-Built by **Adithyan** 
-
->>>>>>> c1db60f56da1f35c2a9d4e769e899cfcf29a73f6
