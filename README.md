@@ -189,7 +189,12 @@ Free API tier, no local GPU required, 1024-dimensional embeddings with strong se
 
 ## 👨‍💻 Author
 
+<<<<<<< HEAD
 Built by **Adithyan** — 4th year CS student
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://linkedin.com/in/yourprofile)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/yourusername)
+=======
+Built by **Adithyan** 
+
+>>>>>>> c1db60f56da1f35c2a9d4e769e899cfcf29a73f6
