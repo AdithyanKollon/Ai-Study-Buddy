@@ -195,5 +195,5 @@ Free API tier, no local GPU required, 1024-dimensional embeddings with strong se
 
 ## 👨‍💻 Author
 
-Built by **Adithyan** — 
+Built by **Adithyan** 
 
