@@ -66,7 +66,7 @@
         <div className="auth-box">
 
           <div className="auth-logo">
-            <div className="auth-logo-icon">📚</div>
+            <div className="auth-logo-icon">SB</div>
           </div>
 
           <h1>Study<span>Buddy</span></h1>
@@ -94,7 +94,7 @@
           />
 
           <button className="auth-btn" onClick={handleSubmit} disabled={loading}>
-            {loading ? "Please wait..." : isLogin ? "Sign In →" : "Create Account →"}
+            {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
           </button>
 
           <div className="auth-divider"><span>or</span></div>
@@ -110,3 +110,4 @@
       </div>
     );
   }
+

@@ -156,7 +156,7 @@ export default function App() {
 
       const welcomeMsg = {
         role: "assistant",
-        content: `✅ **${res.data.filename}** uploaded! ${res.data.chunks_stored} chunks processed. Ask me anything about this document.`,
+        content: `**${res.data.filename}** uploaded. ${res.data.chunks_stored} chunks processed. Ask me anything about this document.`,
         time: new Date().toISOString(),
         sources: []
       };
@@ -316,12 +316,12 @@ export default function App() {
     <div className="layout">
       <div className="sidebar">
         <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">📚</div>
+          <div className="sidebar-logo-icon">SB</div>
           <div className="sidebar-logo-text">Study<span>Buddy</span></div>
         </div>
 
         <button className="new-doc-btn" onClick={() => fileInputRef.current.click()}>
-          {uploading ? "⏳ Uploading..." : "✏️ New Document"}
+          {uploading ? "Uploading..." : "New Document"}
         </button>
         <input
           ref={fileInputRef}
@@ -343,14 +343,14 @@ export default function App() {
             onClick={() => setActiveDocId(doc.doc_id)}
           >
             <div className="doc-item-left">
-              <div className="doc-icon-wrapper">📄</div>
+              <div className="doc-icon-wrapper">DOC</div>
               <span className="doc-name" title={doc.filename}>{doc.filename}</span>
             </div>
             <button
               className="delete-doc-btn"
               onClick={(e) => handleDeleteDoc(e, doc.doc_id)}
               title="Delete document"
-            >🗑</button>
+            >Delete</button>
           </div>
         ))}
 
@@ -359,25 +359,25 @@ export default function App() {
             <div className="user-avatar">{userEmail?.[0]}</div>
             <div className="user-email">{userEmail}</div>
           </div>
-          <button className="logout-btn" onClick={handleLogout}>↪ Sign out</button>
+          <button className="logout-btn" onClick={handleLogout}>Sign out</button>
         </div>
       </div>
 
       <div className="main">
         {!activeDocId ? (
           <div className="empty-state">
-            <div className="empty-state-orb">📖</div>
+            <div className="empty-state-orb">PDF</div>
             <h2>Start learning smarter</h2>
             <p>Upload any PDF — lecture notes, research papers, textbooks — and chat with it instantly.</p>
             <button className="upload-btn-main" onClick={() => fileInputRef.current.click()}>
-              Upload your first PDF →
+              Upload your first PDF
             </button>
           </div>
         ) : (
           <>
             <div className="topbar">
               <div className="topbar-left">
-                <div className="topbar-doc-icon">📄</div>
+                <div className="topbar-doc-icon">DOC</div>
                 <div>
                   <div className="topbar-title">{activeDoc?.filename}</div>
                   <div className="topbar-subtitle">{messages.length} messages</div>
@@ -389,7 +389,7 @@ export default function App() {
                   onClick={handleExportPDF}
                   disabled={messages.length === 0}
                 >
-                  ⬇ Export PDF
+                  Export PDF
                 </button>
               </div>
             </div>
@@ -398,7 +398,7 @@ export default function App() {
               {messages.map((msg, i) => (
                 <div key={i} className={`message-row ${msg.role}`}>
                   <div className={`avatar ${msg.role}`}>
-                    {msg.role === "user" ? "👤" : "🤖"}
+                    {msg.role === "user" ? "You" : "AI"}
                   </div>
                   <div className="message-content">
                     <div className="bubble">
@@ -409,7 +409,7 @@ export default function App() {
                     {msg.sources && msg.sources.length > 0 && (
                       <div className="source-chips">
                         {msg.sources.map((s, j) => (
-                          <span key={j} className="source-chip">📎 Source {j + 1}</span>
+                          <span key={j} className="source-chip">Source {j + 1}</span>
                         ))}
                       </div>
                     )}
@@ -420,7 +420,7 @@ export default function App() {
 
               {streamingText && (
                 <div className="message-row assistant">
-                  <div className="avatar assistant">🤖</div>
+                  <div className="avatar assistant">AI</div>
                   <div className="message-content">
                     <div className="bubble">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -431,7 +431,7 @@ export default function App() {
                     {streamingSources.length > 0 && (
                       <div className="source-chips">
                         {streamingSources.map((s, j) => (
-                          <span key={j} className="source-chip">📎 Source {j + 1}</span>
+                          <span key={j} className="source-chip">Source {j + 1}</span>
                         ))}
                       </div>
                     )}
@@ -441,7 +441,7 @@ export default function App() {
 
               {loading && !streamingText && (
                 <div className="message-row assistant">
-                  <div className="avatar assistant">🤖</div>
+                  <div className="avatar assistant">AI</div>
                   <div className="message-content">
                     <div className="bubble">
                       <div className="thinking-dots">
@@ -493,7 +493,7 @@ export default function App() {
                   onClick={() => handleChat()}
                   disabled={loading || !input.trim()}
                 >
-                  ➤
+                  Send
                 </button>
               </div>
               <div className="input-hint">Enter to send · Shift+Enter for new line</div>
