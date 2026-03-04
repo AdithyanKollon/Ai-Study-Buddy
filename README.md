@@ -4,8 +4,11 @@
 
 **[Live Demo](https://ai-study-buddy-6jyk.vercel.app)** · **[Backend API](https://ai-study-buddy-production-e464.up.railway.app)**
 
+- **Login Page**
 ![Login page](screenshots/3.png)
+- **Home Page**
 ![Home page](screenshots/2.png)
+- **Chat Page**
 ![Chat page](screenshots/1.png)
 
 
@@ -192,5 +195,5 @@ Free API tier, no local GPU required, 1024-dimensional embeddings with strong se
 
 ## 👨‍💻 Author
 
-Built by **Adithyan** — 
+Built by **Adithyan** 
 
